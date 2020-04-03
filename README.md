@@ -1,6 +1,6 @@
 # DroneSimulationLite
 ![](https://github.com/JqkerN/DroneSimulationLite/blob/master/DroneSimulatorLight.png)
-An lighter version to visualize the simulation from gazebo. 
+A lighter version to visualize the simulation from gazebo. 
 ## Needed Packages
 [Tkinter](https://riptutorial.com/tkinter/example/3206/installation-or-setup) -
 *Should be pre-installed for Python.*<br/>
@@ -16,8 +16,8 @@ $ pip install pyopengltk
 ```
 $ pip install PyOpenGL
 ```
-Add following line too your .launch file
+Add following line to your .launch file
 ```
-<node pkg="DroneSimulationLight_2" type="GUI.py" name="DroneSimulationLight_2" args="demo01.world.json"/>
+<node pkg="DroneSimulationLight" type="GUI.py" name="DroneSimulationLight" args="demo01.world.json"/>
 ```
-Finnaly, set your gazebo "gui" to false in your launch file. 
+Finally, set your gazebo "gui" to false in your launch file. 

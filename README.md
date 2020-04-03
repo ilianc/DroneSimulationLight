@@ -1,5 +1,5 @@
 # DroneSimulationLite
-![](https://github.com/JqkerN/DroneSimulationLite/blob/master/DroneSimulatorLight.png)
+![](https://github.com/ilianc/DroneSimulationLight/blob/master/src/scripts/DroneSimulationLight.png)
 A lighter version to visualize the simulation from gazebo. 
 ## Needed Packages
 [Tkinter](https://riptutorial.com/tkinter/example/3206/installation-or-setup) -

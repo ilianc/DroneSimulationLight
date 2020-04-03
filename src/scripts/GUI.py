@@ -419,6 +419,7 @@ sub_pos = rospy.Subscriber('/cf1/pose', PoseStamped, pose_callback)
 
 def main():
     global FPS, world_SELECTED, POSE
+
     R_arrow = lookup("RIGHTWARDS ARROW")
     L_arrow = lookup("LEFTWARDS ARROW")
     U_arrow = lookup("UPWARDS ARROW")
@@ -426,126 +427,128 @@ def main():
 
     # NOTE: Frames & root settings
     root = Tk()
+    root.title('Drone Simulation Light')
     root.geometry("1980x1080")
     root.configure(background='black')
-    frame1=Frame(root)
-    
-    frame1.place(relx=0.5, rely=0.5, anchor=CENTER)
+    while not rospy.is_shutdown():  
+        frame1=Frame(root)
+        
+        frame1.place(relx=0.5, rely=0.5, anchor=CENTER)
 
-    frame2=Frame(root, bg='grey')
-    frame2.pack(side=TOP, fill=X)
+        frame2=Frame(root, bg='grey')
+        frame2.pack(side=TOP, fill=X)
 
-    frame3=Frame(root, bg='black')
-    frame3.place(relx=0.8, rely=0.8, anchor=CENTER)
-
-
-    # NOTE: Frame 1
-    # Map OpenGL shower frame
-    app = AppOgl(frame1, bg='black', width=1980, height=1080)
-    app.grid(row=0, column=0)
-    app.animate = 1
-    app.after(100, app.printContext)
+        frame3=Frame(root, bg='black')
+        frame3.place(relx=0.8, rely=0.8, anchor=CENTER)
 
 
-    # NOTE: Frame 2
-    # world level selection
-    world_options = [
-        'Default',
-        'demo01', 
-        'demo02', 
-        'demo03'
-        ]
-    world_SELECTED = StringVar()
-    world_SELECTED.set(world_options[0])
-    world_drop_menu = OptionMenu(frame2, world_SELECTED, *world_options)
-
-    #Frame 2 layout
-    POSE = StringVar()
-    pose_label = Label(frame2, textvariable=POSE, width=50, borderwidth=5, bg='grey', highlightthickness=0)
-    pose_label.place(relx=0.7, rely=0.5, anchor=CENTER)
-
-    FPS = StringVar()
-    fps_label = Label(frame2, textvariable=FPS, width=25, borderwidth=5, bg='grey', highlightthickness=0)
-    fps_label.place(relx=0.9, rely=0.5, anchor=CENTER)
-    Label(frame2, text="default world: " + args[0], bg='grey').place(relx=0.5, rely=0.5, anchor=CENTER)
-    Label(frame2, text='Change world file', bg='grey').grid(row=0, column=1, padx=20, pady=(5, 0))
-    world_drop_menu.grid(row=1, column=1, padx=20, pady=(5, 0))
+        # NOTE: Frame 1
+        # Map OpenGL shower frame
+        app = AppOgl(frame1, bg='black', width=1980, height=1080)
+        app.grid(row=0, column=0)
+        app.animate = 1
+        app.after(100, app.printContext)
 
 
-    # NOTE: Frame 3
-    frame31=Frame(frame3, bg='black')
-    frame32=Frame(frame3, bg='black')
-    frame31.pack()
-    frame32.pack()
+        # NOTE: Frame 2
+        # world level selection
+        world_options = [
+            'Default',
+            'demo01', 
+            'demo02', 
+            'demo03'
+            ]
+        world_SELECTED = StringVar()
+        world_SELECTED.set(world_options[0])
+        world_drop_menu = OptionMenu(frame2, world_SELECTED, *world_options)
 
-    # Rotate arrows buttons
-    button_yaw_left = Button(frame31, text = L_arrow.encode('utf-8'))
-    button_yaw_right = Button(frame31, text = R_arrow.encode('utf-8'))
-    button_roll_left = Button(frame31, text = L_arrow.encode('utf-8'))
-    button_roll_right = Button(frame31, text = R_arrow.encode('utf-8'))
-    button_pitch_left = Button(frame31, text = L_arrow.encode('utf-8'))
-    button_pitch_right = Button(frame31, text = R_arrow.encode('utf-8'))
+        #Frame 2 layout
+        POSE = StringVar()
+        pose_label = Label(frame2, textvariable=POSE, width=50, borderwidth=5, bg='grey', highlightthickness=0)
+        pose_label.place(relx=0.7, rely=0.5, anchor=CENTER)
 
-    button_in_x = Button(frame31, text = '+', width=5)
-    button_out_x = Button(frame31, text = '-', width=5)
-    button_in_y = Button(frame31, text = '+', width=5)
-    button_out_y = Button(frame31, text = '-', width=5)
-    button_in_z = Button(frame31, text = '+', width=5)
-    button_out_z = Button(frame31, text = '-', width=5)
-
-    #Frame 3 layout
-    Label(frame31, text="ROLL", fg = 'white', bg='black').grid(row=1, column=0)
-    button_roll_left.grid(row=1, column=1)
-    button_roll_right.grid(row=1, column=2)
-    button_roll_left.bind("<Button-1>", turn_roll_left)
-    button_roll_left.bind('<ButtonRelease-1>', stop)
-    button_roll_right.bind("<Button-1>", turn_roll_right)
-    button_roll_right.bind('<ButtonRelease-1>', stop)
-
-    Label(frame31, text="PITCH", fg = 'white', bg='black').grid(row=2, column=0)
-    button_pitch_left.grid(row=2, column=1)
-    button_pitch_right.grid(row=2, column=2)
-    button_pitch_left.bind("<Button-1>", turn_pitch_left)
-    button_pitch_left.bind('<ButtonRelease-1>', stop)
-    button_pitch_right.bind("<Button-1>", turn_pitch_right)
-    button_pitch_right.bind('<ButtonRelease-1>', stop)
-
-    Label(frame31, text="YAW", fg = 'white', bg='black').grid(row=3, column=0)
-    button_yaw_left.grid(row=3, column=1)
-    button_yaw_right.grid(row=3, column=2)
-    button_yaw_left.bind("<Button-1>", turn_yaw_left)
-    button_yaw_left.bind('<ButtonRelease-1>', stop)
-    button_yaw_right.bind("<Button-1>", turn_yaw_right)
-    button_yaw_right.bind('<ButtonRelease-1>', stop)
+        FPS = StringVar()
+        fps_label = Label(frame2, textvariable=FPS, width=25, borderwidth=5, bg='grey', highlightthickness=0)
+        fps_label.place(relx=0.9, rely=0.5, anchor=CENTER)
+        Label(frame2, text="default world: " + args[0], bg='grey').place(relx=0.5, rely=0.5, anchor=CENTER)
+        Label(frame2, text='Change world file', bg='grey').grid(row=0, column=1, padx=20, pady=(5, 0))
+        world_drop_menu.grid(row=1, column=1, padx=20, pady=(5, 0))
 
 
+        # NOTE: Frame 3
+        frame31=Frame(frame3, bg='black')
+        frame32=Frame(frame3, bg='black')
+        frame31.pack()
+        frame32.pack()
 
-    Label(frame31, text="X", fg = 'white', bg='black').grid(row=0, column=4, padx=(20,0))
-    button_in_x.grid(row=1, column=4, padx=(20,0))
-    button_out_x.grid(row=2, column=4, padx=(20,0))
-    button_in_x.bind("<Button-1>", zoom_in_x)
-    button_in_x.bind('<ButtonRelease-1>', stop)
-    button_out_x.bind("<Button-1>", zoom_out_x)
-    button_out_x.bind('<ButtonRelease-1>', stop)
+        # Rotate arrows buttons
+        button_yaw_left = Button(frame31, text = L_arrow.encode('utf-8'))
+        button_yaw_right = Button(frame31, text = R_arrow.encode('utf-8'))
+        button_roll_left = Button(frame31, text = L_arrow.encode('utf-8'))
+        button_roll_right = Button(frame31, text = R_arrow.encode('utf-8'))
+        button_pitch_left = Button(frame31, text = L_arrow.encode('utf-8'))
+        button_pitch_right = Button(frame31, text = R_arrow.encode('utf-8'))
 
-    Label(frame31, text="Y", fg = 'white', bg='black').grid(row=0, column=5)
-    button_in_y.grid(row=1, column=5)
-    button_out_y.grid(row=2, column=5)
-    button_in_y.bind("<Button-1>", zoom_in_y)
-    button_in_y.bind('<ButtonRelease-1>', stop)
-    button_out_y.bind("<Button-1>", zoom_out_y)
-    button_out_y.bind('<ButtonRelease-1>', stop)
+        button_in_x = Button(frame31, text = '+', width=5)
+        button_out_x = Button(frame31, text = '-', width=5)
+        button_in_y = Button(frame31, text = '+', width=5)
+        button_out_y = Button(frame31, text = '-', width=5)
+        button_in_z = Button(frame31, text = '+', width=5)
+        button_out_z = Button(frame31, text = '-', width=5)
 
-    Label(frame31, text="Z", fg = 'white', bg='black').grid(row=0, column=6)
-    button_in_z.grid(row=1, column=6)
-    button_out_z.grid(row=2, column=6)
-    button_in_z.bind("<Button-1>", zoom_in_z)
-    button_in_z.bind('<ButtonRelease-1>', stop)
-    button_out_z.bind("<Button-1>", zoom_out_z)
-    button_out_z.bind('<ButtonRelease-1>', stop)
+        #Frame 3 layout
+        Label(frame31, text="ROLL", fg = 'white', bg='black').grid(row=1, column=0)
+        button_roll_left.grid(row=1, column=1)
+        button_roll_right.grid(row=1, column=2)
+        button_roll_left.bind("<Button-1>", turn_roll_left)
+        button_roll_left.bind('<ButtonRelease-1>', stop)
+        button_roll_right.bind("<Button-1>", turn_roll_right)
+        button_roll_right.bind('<ButtonRelease-1>', stop)
 
-    
-    app.mainloop()
+        Label(frame31, text="PITCH", fg = 'white', bg='black').grid(row=2, column=0)
+        button_pitch_left.grid(row=2, column=1)
+        button_pitch_right.grid(row=2, column=2)
+        button_pitch_left.bind("<Button-1>", turn_pitch_left)
+        button_pitch_left.bind('<ButtonRelease-1>', stop)
+        button_pitch_right.bind("<Button-1>", turn_pitch_right)
+        button_pitch_right.bind('<ButtonRelease-1>', stop)
+
+        Label(frame31, text="YAW", fg = 'white', bg='black').grid(row=3, column=0)
+        button_yaw_left.grid(row=3, column=1)
+        button_yaw_right.grid(row=3, column=2)
+        button_yaw_left.bind("<Button-1>", turn_yaw_left)
+        button_yaw_left.bind('<ButtonRelease-1>', stop)
+        button_yaw_right.bind("<Button-1>", turn_yaw_right)
+        button_yaw_right.bind('<ButtonRelease-1>', stop)
+
+
+
+        Label(frame31, text="X", fg = 'white', bg='black').grid(row=0, column=4, padx=(20,0))
+        button_in_x.grid(row=1, column=4, padx=(20,0))
+        button_out_x.grid(row=2, column=4, padx=(20,0))
+        button_in_x.bind("<Button-1>", zoom_in_x)
+        button_in_x.bind('<ButtonRelease-1>', stop)
+        button_out_x.bind("<Button-1>", zoom_out_x)
+        button_out_x.bind('<ButtonRelease-1>', stop)
+
+        Label(frame31, text="Y", fg = 'white', bg='black').grid(row=0, column=5)
+        button_in_y.grid(row=1, column=5)
+        button_out_y.grid(row=2, column=5)
+        button_in_y.bind("<Button-1>", zoom_in_y)
+        button_in_y.bind('<ButtonRelease-1>', stop)
+        button_out_y.bind("<Button-1>", zoom_out_y)
+        button_out_y.bind('<ButtonRelease-1>', stop)
+
+        Label(frame31, text="Z", fg = 'white', bg='black').grid(row=0, column=6)
+        button_in_z.grid(row=1, column=6)
+        button_out_z.grid(row=2, column=6)
+        button_in_z.bind("<Button-1>", zoom_in_z)
+        button_in_z.bind('<ButtonRelease-1>', stop)
+        button_out_z.bind("<Button-1>", zoom_out_z)
+        button_out_z.bind('<ButtonRelease-1>', stop)
+
+        
+        app.mainloop()
 
 
 if __name__ == '__main__':

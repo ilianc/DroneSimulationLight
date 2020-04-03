@@ -18,6 +18,6 @@ $ pip install PyOpenGL
 ```
 Add following line to your .launch file
 ```
-<node pkg="DroneSimulationLight_2" type="GUI.py" name="DroneSimulationLight_2" args="demo01.world.json"/>
+<node pkg="DroneSimulationLight" type="GUI.py" name="DroneSimulationLight" args="demo01.world.json"/>
 ```
 Finnaly, set your gazebo "gui" to false in your launch file. 

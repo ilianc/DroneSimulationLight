@@ -470,8 +470,7 @@ def main():
         Label(frame2, text="default world: " + args[0], bg='grey').place(relx=0.5, rely=0.5, anchor=CENTER)
         Label(frame2, text='Change world file', bg='grey').grid(row=0, column=1, padx=20, pady=(5, 0))
         world_drop_menu.grid(row=1, column=1, padx=20, pady=(5, 0))
-
-
+        
         # NOTE: Frame 3
         frame31=Frame(frame3, bg='black')
         frame32=Frame(frame3, bg='black')
@@ -545,6 +544,11 @@ def main():
         button_out_z.bind('<ButtonRelease-1>', stop)
 
         
+        Label(frame32, text='Rear of the drone', bg='red', width=15).grid(row=1, column=0, padx=20, pady=(25, 0))
+        Label(frame32, text='Front of the drone', bg='green', width=15).grid(row=2, column=0, padx=20, pady=(5, 0))
+        Label(frame32, text='Aruco markers', bg='blue', width=15).grid(row=1, column=1, padx=20, pady=(5, 0))
+        Label(frame32, text='Signs', bg='purple', width=15).grid(row=2, column=1, padx=20, pady=(5, 0))
+
         app.mainloop()
 
 

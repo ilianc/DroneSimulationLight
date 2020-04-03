@@ -16,7 +16,7 @@ $ pip install pyopengltk
 ```
 $ pip install PyOpenGL
 ```
-Add following line too your .launch file
+Add following line to your .launch file
 ```
 <node pkg="DroneSimulationLight_2" type="GUI.py" name="DroneSimulationLight_2" args="demo01.world.json"/>
 ```

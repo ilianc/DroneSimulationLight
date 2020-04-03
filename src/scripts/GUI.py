@@ -7,21 +7,20 @@ Ilian Corneliussen
 ilianc@kth.se
 '''
 
-import time
-from tkinter import *
-from OpenGL import GL, GLU
-from pyopengltk import OpenGLFrame
-import json
 import sys
+import time
 import math
+import json
+import numpy as np
+from unicodedata import *
+from tkinter import *
+from pyopengltk import OpenGLFrame
 from OpenGL.GL import *
 from OpenGL.GLUT import *
 from OpenGL.GLU import *
-import numpy as np
 import rospy
 from tf.transformations import euler_from_quaternion, quaternion_from_euler
 from geometry_msgs.msg import PoseStamped
-from unicodedata import *
 
 
 class AttributeDict(dict):
@@ -55,15 +54,15 @@ def draw_drone(position, orientation):
     global POSE
     # Takes out the position and orientation of the drone
     position, orientation = getPose(position, orientation)
-    GL.glColor(0.5, 0.5, 0.5, 0.0)
-    GL.glPushMatrix()
+    glColor(0.5, 0.5, 0.5, 0.0)
+    glPushMatrix()
     tx, ty, tz = position
-    GL.glTranslate(tx, ty, tz)
+    glTranslate(tx, ty, tz)
     pitch, roll, yaw = orientation
-    GL.glRotate(yaw, 0, 0, 1)
-    GL.glRotate(roll+90, 0, 1, 0)
-    GL.glRotate(pitch, 0.8, 0, 0)
-    GL.glScale(0.02, 0.05, 0.05)
+    glRotate(yaw, 0, 0, 1)
+    glRotate(roll+90, 0, 1, 0)
+    glRotate(pitch, 0.8, 0, 0)
+    glScale(0.02, 0.05, 0.05)
 
     # Makes the cube for the drone
     glBegin(GL_QUADS)
@@ -104,87 +103,87 @@ def draw_drone(position, orientation):
     glVertex3f( 1.0,-1.0,-1.0)
     glEnd()
 
-    GL.glPopMatrix()
+    glPopMatrix()
 
     # Gets the position and orientation for GUI
     POSE.set("Position: %3s, %3s, %3s \nOrientation: %3s, %3s, %3s" % (str(round(tx,2)), str(round(ty,2)), str(round(tz,2)), str(round(pitch,2)), str(round(roll,2)), str(round(yaw,2))))
 
 def draw_grid(cells=10, cell_size=0.1):
     # From world_viewer.py
-    GL.glColor(0.4, 0.4, 0.4, 0.5)
+    glColor(0.4, 0.4, 0.4, 0.5)
     for nx in range(-cells//2, cells//2):
         xs = (nx*cell_size, (nx+1)*cell_size)
         for ny in range(-cells//2, cells//2):
             ys = (ny*cell_size, (ny+1)*cell_size)
-            GL.glBegin(GL.GL_LINE_STRIP)
+            glBegin(GL_LINE_STRIP)
             for x, y in ((0, 0), (1, 0), (1, 1), (0, 1), (0, 0)):
-                GL.glVertex(xs[x], ys[y], 0.0)
-            GL.glEnd()
+                glVertex(xs[x], ys[y], 0.0)
+            glEnd()
 
 
 def draw_airspace(rmin, rmax):
     # From world_viewer.py
     r = np.array([rmin, rmax])
-    GL.glBegin(GL.GL_LINES)
-    GL.glColor(1, 0, 0, 1.0)
+    glBegin(GL_LINES)
+    glColor(1, 0, 0, 1.0)
     for dim in range(3):
         for x in (0, 1):
             for y, z in ((0, 0), (1, 0), (1, 1), (0, 1)):
                 rows = np.roll([x, y, z], dim)
                 v = r[rows, (0, 1, 2)]
-                GL.glVertex(*v)
-    GL.glEnd()
+                glVertex(*v)
+    glEnd()
 
 
 def draw_wall(rmin, rmax):
     # From world_viewer.py
     r = np.array([rmin, rmax])
-    GL.glBegin(GL.GL_QUADS)
-    GL.glColor(0.8, 0.7, 0.5, 1.0)
+    glBegin(GL_QUADS)
+    glColor(0.8, 0.7, 0.5, 1.0)
     for xy, z in ((0, 0), (1, 0), (1, 1), (0, 1)):
         v = r[(xy, xy, z), (0, 1, 2)]
-        GL.glVertex(*v)
-    GL.glEnd()
+        glVertex(*v)
+    glEnd()
 
 
 def draw_marker(num, position, orientation, w=0.197, h=0.197):
     # From world_viewer.py
-    GL.glColor(0, 0, 0.8, 0.9)
-    GL.glPushMatrix()
+    glColor(0, 0, 0.8, 0.9)
+    glPushMatrix()
     tx, ty, tz = position
-    GL.glTranslate(tx, ty, tz)
+    glTranslate(tx, ty, tz)
     pitch, roll, yaw = orientation
-    GL.glRotate(yaw, 0, 0, 1)
-    GL.glRotate(roll, 0, 1, 0)
-    GL.glRotate(pitch+90, 1, 0, 0)
-    GL.glScale(w, h, 1.0)
-    GL.glBegin(GL.GL_QUADS)
-    GL.glVertex(-0.5, -0.5, -0.001)
-    GL.glVertex(-0.5, +0.5, -0.001)
-    GL.glVertex(+0.5, +0.5, -0.001)
-    GL.glVertex(+0.5, -0.5, -0.001)
-    GL.glEnd()
-    GL.glPopMatrix()
+    glRotate(yaw, 0, 0, 1)
+    glRotate(roll, 0, 1, 0)
+    glRotate(pitch+90, 1, 0, 0)
+    glScale(w, h, 1.0)
+    glBegin(GL_QUADS)
+    glVertex(-0.5, -0.5, -0.001)
+    glVertex(-0.5, +0.5, -0.001)
+    glVertex(+0.5, +0.5, -0.001)
+    glVertex(+0.5, -0.5, -0.001)
+    glEnd()
+    glPopMatrix()
 
 
 def draw_roadsign(sign, position, orientation, w=0.2, h=0.2):
     # From world_viewer.py
-    GL.glColor(0.8, 0, 0.8, 0.9)
-    GL.glPushMatrix()
+    glColor(0.8, 0, 0.8, 0.9)
+    glPushMatrix()
     tx, ty, tz = position
-    GL.glTranslate(tx, ty, tz)
+    glTranslate(tx, ty, tz)
     pitch, roll, yaw = orientation
-    GL.glRotate(yaw, 0, 0, 1)
-    GL.glRotate(roll, 0, 1, 0)
-    GL.glRotate(pitch+90, 1, 0, 0)
-    GL.glScale(w, h, 1.0)
-    GL.glBegin(GL.GL_QUADS)
-    GL.glVertex(-0.5, -0.5, -0.001)
-    GL.glVertex(-0.5, +0.5, -0.001)
-    GL.glVertex(+0.5, +0.5, -0.001)
-    GL.glVertex(+0.5, -0.5, -0.001)
-    GL.glEnd()
-    GL.glPopMatrix()
+    glRotate(yaw, 0, 0, 1)
+    glRotate(roll, 0, 1, 0)
+    glRotate(pitch+90, 1, 0, 0)
+    glScale(w, h, 1.0)
+    glBegin(GL_QUADS)
+    glVertex(-0.5, -0.5, -0.001)
+    glVertex(-0.5, +0.5, -0.001)
+    glVertex(+0.5, +0.5, -0.001)
+    glVertex(+0.5, -0.5, -0.001)
+    glEnd()
+    glPopMatrix()
 
 def getPose(position, orientation_quatarions):
     # Takes the PoseStamp.msg and takes out nessesary cord. 
@@ -212,19 +211,19 @@ class AppOgl(OpenGLFrame):
         
         # From world_viewer.py: Render a single frame
         w, h = 800, 600
-        GL.glMatrixMode(GL.GL_PROJECTION)
+        glMatrixMode(GL_PROJECTION)
         # 45 FoV, aspect ratio, zNear clip, zFar clip.
-        GLU.gluPerspective(45, w/h, 0.2, 20.0)
+        gluPerspective(45, w/h, 0.2, 20.0)
         origin = np.mean(np.array([WORLD.airspace.min, WORLD.airspace.max]), axis=0)
 
-        GL.glEnable(GL.GL_BLEND)
-        GL.glEnable(GL.GL_DEPTH_TEST)
-        GL.glDepthFunc(GL.GL_LESS)
-        GL.glMatrixMode(GL.GL_MODELVIEW)
+        glEnable(GL_BLEND)
+        glEnable(GL_DEPTH_TEST)
+        glDepthFunc(GL_LESS)
+        glMatrixMode(GL_MODELVIEW)
 
         # Viewport starts with Y up and Z going away from the camera
-        GL.glTranslate(0.0, -0.0, -3)   # NOTE: Change for alternative starting possition
-        GL.glRotate(-75.0, 1, 0, 0)     # NOTE: Change for alternative starting angle
+        glTranslate(0.0, -0.0, -3)   # NOTE: Change for alternative starting possition
+        glRotate(-75.0, 1, 0, 0)     # NOTE: Change for alternative starting angle
 
 
     def redraw(self):
@@ -249,10 +248,10 @@ class AppOgl(OpenGLFrame):
         dt = t1-self.start
         t0 = t1
 
-        GL.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT)
-        GL.glMatrixMode(GL.GL_MODELVIEW)
-        GL.glRotate(ANGLE, X_ROTATE, Y_ROTATE, Z_ROTATE)
-        GL.glPushMatrix()
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+        glMatrixMode(GL_MODELVIEW)
+        glRotate(ANGLE, X_ROTATE, Y_ROTATE, Z_ROTATE)
+        glPushMatrix()
 
         # Makes changes to scene location
         x, y, z = -origin
@@ -262,7 +261,7 @@ class AppOgl(OpenGLFrame):
             Y_ZOOM += STEP_SIZE
         elif Z_RUNNING:
             Z_ZOOM += STEP_SIZE
-        GL.glTranslate(x+X_ZOOM, y+Y_ZOOM,z+Z_ZOOM)
+        glTranslate(x+X_ZOOM, y+Y_ZOOM,z+Z_ZOOM)
 
 
         # Redraws the grid, airspace, wall, markers, roadsigns and drone
@@ -276,7 +275,7 @@ class AppOgl(OpenGLFrame):
             draw_roadsign(roadsign.sign, roadsign.pose.position, roadsign.pose.orientation)
 
         draw_drone(pose.pose.position, pose.pose.orientation)
-        GL.glPopMatrix()
+        glPopMatrix()
 
         # Updates FPS and Frame count (GUI)
         if self.nframes > 1:
@@ -529,7 +528,7 @@ def main():
         Label(frame32, text='Signs', bg='purple', width=15).grid(row=2, column=1, padx=20, pady=(5, 10))
 
         app.mainloop()
-
+    
 
 if __name__ == '__main__':
     main()

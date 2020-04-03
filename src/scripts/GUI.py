@@ -6,6 +6,7 @@ from OpenGL import GL, GLU
 from pyopengltk import OpenGLFrame
 import json
 import sys
+import math
 from OpenGL.GL import *
 from OpenGL.GLUT import *
 from OpenGL.GLU import *
@@ -61,88 +62,38 @@ def draw_drone(position, orientation):
 
     glBegin(GL_QUADS)
     
-    # glColor3f(0.0,1.0,0.0)
+    glColor3f(0.5,0.5,0.5)
     glVertex3f( 1.0, 1.0,-1.0)
     glVertex3f(-1.0, 1.0,-1.0)
     glVertex3f(-1.0, 1.0, 1.0)
     glVertex3f( 1.0, 1.0, 1.0) 
 
-    # glColor3f(1.0,0.0,0.0)
+    glColor3f(0.5,0.5,0.5)
     glVertex3f( 1.0,-1.0, 1.0)
     glVertex3f(-1.0,-1.0, 1.0)
     glVertex3f(-1.0,-1.0,-1.0)
     glVertex3f( 1.0,-1.0,-1.0) 
 
-    # glColor3f(0.0,1.0,0.0)
-    glVertex3f( 1.0, 1.0, 1.0)
-    glVertex3f(-1.0, 1.0, 1.0)
-    glVertex3f(-1.0,-1.0, 1.0)
-    glVertex3f( 1.0,-1.0, 1.0)
-
-    # glColor3f(1.0,1.0,0.0)l
-    glVertex3f( 1.0,-1.0,-1.0)
-    glVertex3f(-1.0,-1.0,-1.0)
-    glVertex3f(-1.0, 1.0,-1.0)
-    glVertex3f( 1.0, 1.0,-1.0)
-
-    # glColor3f(0.0,0.0,1.0)
-    glVertex3f(-1.0, 1.0, 1.0) 
-    glVertex3f(-1.0, 1.0,-1.0)
-    glVertex3f(-1.0,-1.0,-1.0) 
-    glVertex3f(-1.0,-1.0, 1.0) 
-
-    # glColor3f(1.0,0.0,1.0)
-    glVertex3f( 1.0, 1.0,-1.0) 
-    glVertex3f( 1.0, 1.0, 1.0)
-    glVertex3f( 1.0,-1.0, 1.0)
-    glVertex3f( 1.0,-1.0,-1.0)
-
-    glEnd()
-    GL.glPopMatrix()
-
-    GL.glColor(1.0, 0.0, 0.0, 0.0)
-    GL.glPushMatrix()
-    tx, ty, tz = position
-    GL.glTranslate(tx+0.05, ty, tz)
-    pitch, roll, yaw = orientation
-    GL.glRotate(yaw+90, 0, 0, 1)
-    GL.glRotate(roll+90, 0, 1, 0)
-    GL.glRotate(pitch, 1, 0, 0)
-    GL.glScale(0.01, 0.05, 0.01)
-
-    glBegin(GL_QUADS)
     
-    # glColor3f(0.0,1.0,0.0)
-    glVertex3f( 1.0, 1.0,-1.0)
-    glVertex3f(-1.0, 1.0,-1.0)
-    glVertex3f(-1.0, 1.0, 1.0)
-    glVertex3f( 1.0, 1.0, 1.0) 
-
-    # glColor3f(1.0,0.0,0.0)
-    glVertex3f( 1.0,-1.0, 1.0)
-    glVertex3f(-1.0,-1.0, 1.0)
-    glVertex3f(-1.0,-1.0,-1.0)
-    glVertex3f( 1.0,-1.0,-1.0) 
-
-    # glColor3f(0.0,1.0,0.0)
+    glColor3f(0.0,1.0,0.0)
     glVertex3f( 1.0, 1.0, 1.0)
     glVertex3f(-1.0, 1.0, 1.0)
     glVertex3f(-1.0,-1.0, 1.0)
     glVertex3f( 1.0,-1.0, 1.0)
 
-    # glColor3f(1.0,1.0,0.0)l
+    glColor3f(1.0,0.0,0.0)
     glVertex3f( 1.0,-1.0,-1.0)
     glVertex3f(-1.0,-1.0,-1.0)
     glVertex3f(-1.0, 1.0,-1.0)
     glVertex3f( 1.0, 1.0,-1.0)
 
-    # glColor3f(0.0,0.0,1.0)
+    glColor3f(0.5,0.5,0.5)
     glVertex3f(-1.0, 1.0, 1.0) 
     glVertex3f(-1.0, 1.0,-1.0)
     glVertex3f(-1.0,-1.0,-1.0) 
     glVertex3f(-1.0,-1.0, 1.0) 
 
-    # glColor3f(1.0,0.0,1.0)
+    glColor3f(0.5,0.5,0.5)
     glVertex3f( 1.0, 1.0,-1.0) 
     glVertex3f( 1.0, 1.0, 1.0)
     glVertex3f( 1.0,-1.0, 1.0)
@@ -150,6 +101,55 @@ def draw_drone(position, orientation):
 
     glEnd()
     GL.glPopMatrix()
+
+    # GL.glColor(1.0, 0.0, 0.0, 0.0)
+    # GL.glPushMatrix()
+    # GL.glTranslate(tx, ty, tz)
+    # GL.glRotate(yaw+90, 0, 0, 1)
+    # GL.glRotate(roll+90, 0, 1, 0)
+    # GL.glRotate(pitch, 1, 0, 0)
+    # GL.glScale(0.01, 0.1, 0.01)
+
+    # glBegin(GL_QUADS)
+    
+    # # glColor3f(0.0,1.0,0.0)
+    # glVertex3f( 1.0, 1.0,-1.0)
+    # glVertex3f(-1.0, 1.0,-1.0)
+    # glVertex3f(-1.0, 1.0, 1.0)
+    # glVertex3f( 1.0, 1.0, 1.0) 
+
+    # # glColor3f(1.0,0.0,0.0)
+    # glVertex3f( 1.0,-1.0, 1.0)
+    # glVertex3f(-1.0,-1.0, 1.0)
+    # glVertex3f(-1.0,-1.0,-1.0)
+    # glVertex3f( 1.0,-1.0,-1.0) 
+
+    # # glColor3f(0.0,1.0,0.0)
+    # glVertex3f( 1.0, 1.0, 1.0)
+    # glVertex3f(-1.0, 1.0, 1.0)
+    # glVertex3f(-1.0,-1.0, 1.0)
+    # glVertex3f( 1.0,-1.0, 1.0)
+
+    # # glColor3f(1.0,1.0,0.0)l
+    # glVertex3f( 1.0,-1.0,-1.0)
+    # glVertex3f(-1.0,-1.0,-1.0)
+    # glVertex3f(-1.0, 1.0,-1.0)
+    # glVertex3f( 1.0, 1.0,-1.0)
+
+    # # glColor3f(0.0,0.0,1.0)
+    # glVertex3f(-1.0, 1.0, 1.0) 
+    # glVertex3f(-1.0, 1.0,-1.0)
+    # glVertex3f(-1.0,-1.0,-1.0) 
+    # glVertex3f(-1.0,-1.0, 1.0) 
+
+    # # glColor3f(1.0,0.0,1.0)
+    # glVertex3f( 1.0, 1.0,-1.0) 
+    # glVertex3f( 1.0, 1.0, 1.0)
+    # glVertex3f( 1.0,-1.0, 1.0)
+    # glVertex3f( 1.0,-1.0,-1.0)
+
+    # glEnd()
+    # GL.glPopMatrix()
 
 
     POSE.set("Position: %3s, %3s, %3s \nOrientation: %3s, %3s, %3s" % (str(round(tx,2)), str(round(ty,2)), str(round(tz,2)), str(round(pitch,2)), str(round(roll,2)), str(round(yaw,2))))
@@ -181,11 +181,13 @@ def draw_airspace(rmin, rmax):
 
 def draw_wall(rmin, rmax):
     r = np.array([rmin, rmax])
+    
     GL.glBegin(GL.GL_QUADS)
-    GL.glColor(0, 0.7, 0, 0.6)
+    GL.glColor(0.8, 0.7, 0.5, 1.0)
     for xy, z in ((0, 0), (1, 0), (1, 1), (0, 1)):
         v = r[(xy, xy, z), (0, 1, 2)]
         GL.glVertex(*v)
+        
     GL.glEnd()
 
 
@@ -238,9 +240,9 @@ def getPose(position, orientation_quatarions):
     position_out[1] = position.y
     position_out[2] = position.z
 
-    orientation_out[0] = tmp[0]
-    orientation_out[1] = tmp[1]
-    orientation_out[2] = tmp[2]
+    orientation_out[0] = math.degrees(tmp[0])
+    orientation_out[1] = math.degrees(tmp[1])
+    orientation_out[2] = math.degrees(tmp[2])
 
     return position_out, orientation_out
 
@@ -295,10 +297,7 @@ class AppOgl(OpenGLFrame):
 
         GL.glMatrixMode(GL.GL_MODELVIEW)
         GL.glRotate(ANGLE, X_ROTATE, Y_ROTATE, Z_ROTATE)
-        # ANGLE = 0
-        # X_ROTATE = 0
-        # Y_ROTATE = 0
-        # Z_ROTATE = 0
+      
 
         GL.glPushMatrix()
         x, y, z = -origin
@@ -365,7 +364,7 @@ def turn_yaw_left(event):
     Z_ROTATE = 1
 
 def stop(event):
-    global ANGLE, X_ROTATE, Y_ROTATE, Z_ROTATE, X_RUNNING, STEP_SIZE
+    global ANGLE, X_ROTATE, Y_ROTATE, Z_ROTATE, X_RUNNING, Y_RUNNING, Z_RUNNING, STEP_SIZE
     ANGLE = 0
     X_ROTATE = 0
     Y_ROTATE = 0
@@ -422,16 +421,14 @@ def main():
 
     R_arrow = lookup("RIGHTWARDS ARROW")
     L_arrow = lookup("LEFTWARDS ARROW")
-    U_arrow = lookup("UPWARDS ARROW")
-    D_arrow = lookup("DOWNWARDS ARROW")
 
     # NOTE: Frames & root settings
     root = Tk()
     root.title('Drone Simulation Light')
-    root.geometry("1980x1080")
+    root.geometry("1920x1080")
     root.configure(background='black')
     while not rospy.is_shutdown():  
-        frame1=Frame(root)
+        frame1=Frame(root, highlightthickness=1)
         
         frame1.place(relx=0.5, rely=0.5, anchor=CENTER)
 
@@ -444,7 +441,7 @@ def main():
 
         # NOTE: Frame 1
         # Map OpenGL shower frame
-        app = AppOgl(frame1, bg='black', width=1980, height=1080)
+        app = AppOgl(frame1, bg='black', width=1080, height=1080)
         app.grid(row=0, column=0)
         app.animate = 1
         app.after(100, app.printContext)
